@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Button } from 'semantic-ui-react';
-
+// import { Link } from 'react-router-dom';
 const Header = () => {
   const [promptEvent, setPromptEvent] = useState(null);
   const [appAccepted, setAppAccepted] = useState(false);
@@ -31,7 +31,8 @@ const Header = () => {
   return (
     <Menu stackable inverted size="massive">
       <Menu.Item header>
-        <h1 style={{ color: '#2185D0' }}>QuizApp</h1>
+      {/* <Link to="/">QuizApp</Link> */}
+        <h1 style={{ color: '#2185D0' }} >QuizApp</h1>
       </Menu.Item>
       {promptEvent && !isAppInstalled && (
         <Menu.Item position="right">
