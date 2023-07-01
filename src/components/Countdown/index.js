@@ -26,6 +26,17 @@ const Countdown = ({ countdownTime, timeOver, setTimeTaken }) => {
           willClose: () => timeOver(totalTime - timerTime)
         });
       }
+
+      // Check if user is taking too much time (e.g., more than 45 seconds)
+      const timeThreshold = 60000; // 45 seconds in milliseconds
+      if (timerTime == timeThreshold) {
+        Swal.fire({
+          title: 'Warning',
+          text: 'Only 1 minute left!',
+          icon: 'warning',
+          timer: 5000
+        });
+      }
     }, 1000);
 
     return () => {

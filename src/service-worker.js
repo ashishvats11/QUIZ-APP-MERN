@@ -20,6 +20,7 @@ registerRoute(({ request, url }) => {
     return false;
   }
 
+  
   if (url.pathname.match(fileExtensionRegexp)) {
     return false;
   }
