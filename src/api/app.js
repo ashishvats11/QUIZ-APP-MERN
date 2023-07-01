@@ -4,7 +4,13 @@ const app = Express()
 import bodyParser from "body-parser";
 import logger from 'morgan';
 import testRoute from './routes/test.js';
+import userRoutes from './routes/user.js';
 
+try {
+    mongoose.connect(`mongodb+srv://mukundks:${process.env.MONGOPASS}@quizcluster.rvftkgp.mongodb.net/?retryWrites=true&w=majority`)
+} catch (err) {
+    console.log(err);
+}
 
 app.use(logger('dev'));
 
@@ -20,6 +26,8 @@ app.use((req, res, next) => {
 })
 
 app.use('/', testRoute);
+
+app.use('/user', userRoutes);
 
 app.use((req, res, next) => {
     const err = new Error('Route not found.');
