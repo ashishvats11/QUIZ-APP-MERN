@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Menu, Button, Modal, Form } from 'semantic-ui-react';
 
 const Header = () => {
-  
   const [promptEvent, setPromptEvent] = useState(null);
   const [appAccepted, setAppAccepted] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -49,8 +48,7 @@ const Header = () => {
   return (
     <Menu stackable inverted size="massive">
       <Menu.Item header>
-        <h1 style={{ color: '#2185D0' } }>QuizWhiz</h1>
-        
+        <h1 style={{ color: '#2185D0' }}>QuizWhiz</h1>
       </Menu.Item>
       <Menu.Item position="right">
         <Button color="teal" content="Login" onClick={() => setLoginModalOpen(true)} />
@@ -70,6 +68,7 @@ const Header = () => {
                   placeholder="Email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
+                  required
                 />
               </Form.Field>
               <Form.Field>
@@ -79,6 +78,7 @@ const Header = () => {
                   placeholder="Password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
+                  required
                 />
               </Form.Field>
             </Form>
@@ -112,6 +112,7 @@ const Header = () => {
                   placeholder="Username"
                   value={signupUsername}
                   onChange={(e) => setSignupUsername(e.target.value)}
+                  required
                 />
               </Form.Field>
               <Form.Field>
@@ -121,6 +122,7 @@ const Header = () => {
                   placeholder="Email"
                   value={signupEmail}
                   onChange={(e) => setSignupEmail(e.target.value)}
+                  required
                 />
               </Form.Field>
               <Form.Field>
@@ -130,6 +132,7 @@ const Header = () => {
                   placeholder="Password"
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
+                  required
                 />
               </Form.Field>
             </Form>
