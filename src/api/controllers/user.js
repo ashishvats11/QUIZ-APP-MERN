@@ -50,13 +50,33 @@ export const loginUser = (req, res, next) => {
                     if (result) {
                         const payload = { _id: user[0]._id, username: user[0].username };
                         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
-                        return res.status(200).header('auth-token', token).json({ 
-                            message: 'Authorization successfull', 
-                            token: token 
+                        return res.status(200).header('auth-token', token).json({
+                            message: 'Authorization successfull',
+                            token: token
                         });
                     }
                     res.status(401).json({ message: 'Authorization failed. Check e-mail or password.' });
                 });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+};
+
+export const getUser = (req, res, next) => {
+    User.findById(req.params.userID)
+        .select('_id username email')
+        .exec()
+        .then(user => {
+            if (user) {
+                res.status(200).json({
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email
+                });
+            } else {
+                res.status(404).json({ message: 'User not found.' });
             }
         })
         .catch(err => {
