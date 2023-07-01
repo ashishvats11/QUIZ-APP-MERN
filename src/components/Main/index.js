@@ -214,16 +214,18 @@ const Main = ({ startQuiz }) => {
               </Item.Meta>
               <Divider />
               <Item.Extra>
-                <Button
-                  primary
-                  size="big"
-                  icon="play"
-                  labelPosition="left"
-                  content={processing ? 'Processing...' : 'Play Now'}
-                  onClick={fetchData}
-                  disabled={!allFieldsSelected || processing}
-                />
-              </Item.Extra>
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <Button
+      primary
+      size="big"
+      icon="play"
+      labelPosition="left"
+      content={processing ? 'Processing...' : 'Play Now'}
+      onClick={fetchData}
+      disabled={!allFieldsSelected || processing}
+    />
+  </div>
+</Item.Extra>
             </Item.Content>
           </Item>
         </Item.Group>

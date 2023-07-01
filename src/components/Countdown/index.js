@@ -9,6 +9,7 @@ const Countdown = ({ countdownTime, timeOver, setTimeTaken }) => {
   const totalTime = countdownTime * 1000;
   const [timerTime, setTimerTime] = useState(totalTime);
   const { hours, minutes, seconds } = timeConverter(timerTime);
+  const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,13 +30,20 @@ const Countdown = ({ countdownTime, timeOver, setTimeTaken }) => {
 
       // Check if user is taking too much time (e.g., more than 45 seconds)
       const timeThreshold = 60000; // 45 seconds in milliseconds
-      if (timerTime == timeThreshold) {
+      if (timerTime === timeThreshold) {
         Swal.fire({
           title: 'Warning',
           text: 'Only 1 minute left!',
           icon: 'warning',
           timer: 5000
         });
+        setIsBlinking(true); // Start blinking
+      }
+
+      // Stop blinking when timer reaches 59 seconds
+      const stopBlinkingTime = 59000; // 59 seconds in milliseconds
+      if (timerTime === stopBlinkingTime) {
+        setIsBlinking(false); // Stop blinking
       }
     }, 1000);
 
@@ -47,6 +55,11 @@ const Countdown = ({ countdownTime, timeOver, setTimeTaken }) => {
     // eslint-disable-next-line
   }, [timerTime]);
 
+  const timerStyle = {
+    color: isBlinking ? 'red' : 'inherit',
+    animation: isBlinking ? 'blink 1s infinite' : 'none'
+  };
+
   return (
     <Button.Group size="massive" basic floated="right">
       <Popup
@@ -56,12 +69,20 @@ const Countdown = ({ countdownTime, timeOver, setTimeTaken }) => {
       />
       <Popup
         content="Minutes"
-        trigger={<Button active>{minutes}</Button>}
+        trigger={
+          <Button active style={timerStyle}>
+            {minutes}
+          </Button>
+        }
         position="bottom left"
       />
       <Popup
         content="Seconds"
-        trigger={<Button active>{seconds}</Button>}
+        trigger={
+          <Button active style={timerStyle}>
+            {seconds}
+          </Button>
+        }
         position="bottom left"
       />
     </Button.Group>

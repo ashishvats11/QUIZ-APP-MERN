@@ -20,24 +20,24 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [userSlectedAns, setUserSlectedAns] = useState(null);
+  const [userSelectedAns, setUserSelectedAns] = useState(null);
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState([]);
   const [timeTaken, setTimeTaken] = useState(null);
 
   const handleItemClick = (e, { name }) => {
-    setUserSlectedAns(name);
+    setUserSelectedAns(name);
   };
 
   const handleNext = () => {
     let point = 0;
-    if (userSlectedAns === he.decode(data[questionIndex].correct_answer)) {
+    if (userSelectedAns === he.decode(data[questionIndex].correct_answer)) {
       point = 1;
     }
 
-    const qna = questionsAndAnswers;
+    const qna = [...questionsAndAnswers];
     qna.push({
       question: he.decode(data[questionIndex].question),
-      user_answer: userSlectedAns,
+      user_answer: userSelectedAns,
       correct_answer: he.decode(data[questionIndex].correct_answer),
       point
     });
@@ -53,8 +53,26 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
 
     setCorrectAnswers(correctAnswers + point);
     setQuestionIndex(questionIndex + 1);
-    setUserSlectedAns(null);
+    setUserSelectedAns(null);
     setQuestionsAndAnswers(qna);
+  };
+
+  const handlePrev = () => {
+    if (questionIndex === 0) {
+      return;
+    }
+
+    setQuestionIndex(questionIndex - 1);
+    setUserSelectedAns(questionsAndAnswers[questionIndex - 1].user_answer);
+  };
+
+  const handleSubmit = () => {
+    endQuiz({
+      totalQuestions: data.length,
+      correctAnswers,
+      timeTaken,
+      questionsAndAnswers
+    });
   };
 
   const timeOver = timeTaken => {
@@ -65,6 +83,8 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
       questionsAndAnswers
     });
   };
+
+  const isLastQuestion = questionIndex === data.length - 1;
 
   return (
     <Item.Header>
@@ -105,7 +125,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                         <Menu.Item
                           key={decodedOption}
                           name={decodedOption}
-                          active={userSlectedAns === decodedOption}
+                          active={userSelectedAns === decodedOption}
                           onClick={handleItemClick}
                         >
                           <b style={{ marginRight: '8px' }}>{letter}</b>
@@ -119,14 +139,34 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                 <Item.Extra>
                   <Button
                     primary
-                    content="Next"
-                    onClick={handleNext}
-                    floated="right"
+                    content="Previous"
+                    onClick={handlePrev}
+                    floated="left"
                     size="big"
-                    icon="right chevron"
-                    labelPosition="right"
-                    disabled={!userSlectedAns}
+                    icon="left chevron"
+                    labelPosition="left"
+                    disabled={questionIndex === 0}
                   />
+                  {isLastQuestion ? (
+                    <Button
+                      primary
+                      content="Submit Quiz"
+                      onClick={handleSubmit}
+                      floated="right"
+                      size="big"
+                    />
+                  ) : (
+                    <Button
+                      primary
+                      content="Next"
+                      onClick={handleNext}
+                      floated="right"
+                      size="big"
+                      icon="right chevron"
+                      labelPosition="right"
+                      // disabled={!userSelectedAns}
+                    />
+                  )}
                 </Item.Extra>
               </Item.Content>
             </Item>
