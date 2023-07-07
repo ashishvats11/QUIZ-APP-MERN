@@ -1,7 +1,7 @@
 import Express from 'express';
-const router = Express.Router();
 import { getUser, loginUser, registerUser } from '../controllers/user.js';
 import { checkToken } from '../middlewares/auth.js';
+const router = Express.Router();
 
 router.get('/:userID', checkToken, getUser);
 

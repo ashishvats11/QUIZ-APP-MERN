@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import Express from "express";
-const app = Express()
 import bodyParser from "body-parser";
 import logger from 'morgan';
 import testRoute from './routes/test.js';
 import userRoutes from './routes/user.js';
+const app = Express()
 
 try {
     mongoose.connect(`mongodb+srv://mukundks:${process.env.MONGOPASS}@quizcluster.rvftkgp.mongodb.net/?retryWrites=true&w=majority`)
@@ -20,8 +20,9 @@ app.use(bodyParser.json());
 
 // Handling CORS Error
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Headers', "*");
+    res.header('Access-Control-Allow-Origin', "http://localhost:3000");
+    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Credentials', true);
     next();
 })
 
