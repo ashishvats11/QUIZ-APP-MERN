@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-character-class */
 import mongoose from 'mongoose';
 
 const UserSchema = mongoose.Schema({

@@ -51,7 +51,7 @@ export const loginUser = (req, res, next) => {
                         const payload = { _id: user[0]._id, username: user[0].username };
                         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
                         return res.status(200).header('auth-token', token).json({
-                            message: 'Authorization successfull',
+                            message: 'Authorization successful',
                             token: token
                         });
                     }

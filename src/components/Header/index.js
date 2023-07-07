@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Menu, Button, Modal, Form } from 'semantic-ui-react';
+import axios from '../../api/axios';
+const LOGIN_URL = '/user/login';
+const REG_URL = '/user/register';
 
 const Header = () => {
   const [promptEvent, setPromptEvent] = useState(null);
@@ -35,14 +38,59 @@ const Header = () => {
     });
   };
 
-  const handleLogin = () => {
-    // Handle login logic here
-    console.log('Login');
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post(LOGIN_URL,
+        JSON.stringify(
+          {
+            email: loginEmail,
+            password: loginPassword
+          }
+        ),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+      // console.log(JSON.stringify(response?.data?.token));
+      // eslint-disable-next-line
+      const token = response?.data?.token;
+      setLoginEmail('')
+      setLoginPassword('')
+      console.log('Login Successful');
+    } catch (err) {
+      if (!err?.response) {
+        console.log('Login not successful / No server response.');
+      }
+    }
   };
 
-  const handleSignup = () => {
-    // Handle signup logic here
-    console.log('Signup');
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post(
+        REG_URL,
+        JSON.stringify(
+          {
+            username: signupUsername,
+            email: signupEmail,
+            password: signupPassword
+          }
+        ),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+      // console.log(JSON.stringify(response?.data?.token));
+      // eslint-disable-next-line
+      const token = response?.data?.token;
+    } catch (err) {
+      if (!err?.response) {
+        console.log('Sign Up not successful / No server response.');
+      }
+    }
   };
 
   return (
