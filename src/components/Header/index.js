@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, Button, Modal, Form } from 'semantic-ui-react';
-import axios from '../../api/axios';
-const LOGIN_URL = '/user/login';
-const REG_URL = '/user/register';
+import { Menu, Button, Modal, Form, Message } from 'semantic-ui-react';
 
-const Header = () => {
-  const [promptEvent, setPromptEvent] = useState(null);
-  const [appAccepted, setAppAccepted] = useState(false);
+const App = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [signupModalOpen, setSignupModalOpen] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
@@ -14,83 +9,55 @@ const Header = () => {
   const [signupUsername, setSignupUsername] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [needsSignup, setNeedsSignup] = useState(false);
 
-  let isAppInstalled = false;
+  const handleLogin = () => {
+    // Perform login logic here
+    const isSignedUp = true; // Replace with your logic to check if the user is signed up
 
-  if (window.matchMedia('(display-mode: standalone)').matches || appAccepted) {
-    isAppInstalled = true;
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    setPromptEvent(e);
-  });
-
-  const installApp = () => {
-    promptEvent.prompt();
-    promptEvent.userChoice.then((result) => {
-      if (result.outcome === 'accepted') {
-        setAppAccepted(true);
-        console.log('User accepted the A2HS prompt');
-      } else {
-        console.log('User dismissed the A2HS prompt');
-      }
-    });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await axios.post(LOGIN_URL,
-        JSON.stringify(
-          {
-            email: loginEmail,
-            password: loginPassword
-          }
-        ),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
-      );
-      // console.log(JSON.stringify(response?.data?.token));
-      // eslint-disable-next-line
-      const token = response?.data?.token;
-      setLoginEmail('')
-      setLoginPassword('')
-      console.log('Login Successful');
-    } catch (err) {
-      if (!err?.response) {
-        console.log('Login not successful / No server response.');
-      }
+    if (isSignedUp) {
+      setLoginSuccess(true);
+      // Reset form
+      setLoginEmail('');
+      setLoginPassword('');
+    } else {
+      setNeedsSignup(true);
     }
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await axios.post(
-        REG_URL,
-        JSON.stringify(
-          {
-            username: signupUsername,
-            email: signupEmail,
-            password: signupPassword
-          }
-        ),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
+  const handleSignup = () => {
+    // Perform signup logic here
+    setSignupSuccess(true);
+    // Reset form
+    setSignupUsername('');
+    setSignupEmail('');
+    setSignupPassword('');
+  };
+
+  const renderLoginSuccessMessage = () => {
+    if (loginSuccess) {
+      return (
+        <Message positive>
+          <Message.Header>Login Successful</Message.Header>
+          <p>You have logged in successfully.</p>
+        </Message>
       );
-      // console.log(JSON.stringify(response?.data?.token));
-      // eslint-disable-next-line
-      const token = response?.data?.token;
-    } catch (err) {
-      if (!err?.response) {
-        console.log('Sign Up not successful / No server response.');
-      }
     }
+    return null;
+  };
+
+  const renderSignupSuccessMessage = () => {
+    if (signupSuccess) {
+      return (
+        <Message positive>
+          <Message.Header>Signup Successful</Message.Header>
+          <p>You have signed up successfully.</p>
+        </Message>
+      );
+    }
+    return null;
   };
 
   return (
@@ -108,6 +75,13 @@ const Header = () => {
         >
           <Modal.Header>Login</Modal.Header>
           <Modal.Content>
+            {renderLoginSuccessMessage()}
+            {needsSignup && (
+              <Message>
+                <Message.Header>Sign Up Required</Message.Header>
+                <p>Please sign up to proceed.</p>
+              </Message>
+            )}
             <Form>
               <Form.Field>
                 <label>Email</label>
@@ -133,12 +107,14 @@ const Header = () => {
           </Modal.Content>
           <Modal.Actions>
             <Button content="Cancel" onClick={() => setLoginModalOpen(false)} />
-            <Button
-              color="teal"
-              content="Login"
-              onClick={handleLogin}
-              disabled={!loginEmail || !loginPassword}
-            />
+            {!needsSignup && (
+              <Button
+                color="teal"
+                content="Login"
+                onClick={handleLogin}
+                disabled={!loginEmail || !loginPassword}
+              />
+            )}
           </Modal.Actions>
         </Modal>
       </Menu.Item>
@@ -152,6 +128,7 @@ const Header = () => {
         >
           <Modal.Header>Sign up</Modal.Header>
           <Modal.Content>
+            {renderSignupSuccessMessage()}
             <Form>
               <Form.Field>
                 <label>Username</label>
@@ -196,19 +173,8 @@ const Header = () => {
           </Modal.Actions>
         </Modal>
       </Menu.Item>
-      {promptEvent && !isAppInstalled && (
-        <Menu.Item position="right">
-          <Button
-            color="teal"
-            icon="cloud download"
-            labelPosition="left"
-            content="Install App"
-            onClick={installApp}
-          />
-        </Menu.Item>
-      )}
     </Menu>
   );
 };
 
-export default Header;
+export default App;
