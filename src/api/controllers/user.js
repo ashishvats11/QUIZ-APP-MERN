@@ -24,7 +24,11 @@ export const registerUser = (req, res, next) => {
                             .then((registeredUser) => {
                                 const payload = { _id: registeredUser._id, username: registeredUser.username };
                                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
-                                res.status(201).json({ message: 'User Created', token: token });
+                                res.status(201).json({
+                                    message: 'User Created',
+                                    username: registeredUser.username,
+                                    token: token
+                                });
                             })
                             .catch(err => {
                                 res.status(500).json({ error: err });
@@ -52,6 +56,7 @@ export const loginUser = (req, res, next) => {
                         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
                         return res.status(200).header('auth-token', token).json({
                             message: 'Authorization successful',
+                            username: user[0].username,
                             token: token
                         });
                     }
