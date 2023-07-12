@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Menu, Button, Modal, Form, Message } from 'semantic-ui-react';
-// import axios from '../../axios';
+import axios from '../../axios';
 const LOGIN_URL = '/user/login';
 const REG_URL = '/user/register';
 
