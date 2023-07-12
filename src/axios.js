@@ -1,6 +1,6 @@
 import axios from 'axios';
-const port = 8000
+// const port = 8000
 
 export default axios.create({
-    baseURL:`http://localhost:${port}`
+    baseURL:`https://quiz-app-mern-backend.vercel.app/`
 });
