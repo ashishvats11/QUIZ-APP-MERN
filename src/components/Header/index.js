@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Menu, Button, Modal, Form, Message } from 'semantic-ui-react';
-// import axios from '../../axios';
+import { Menu, Button, Modal, Form } from 'semantic-ui-react';
+import axzios from '../../api/axios';
 const LOGIN_URL = '/user/login';
 const REG_URL = '/user/register';
 
@@ -14,7 +14,6 @@ const Header = () => {
   const [signupUsername, setSignupUsername] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -36,22 +35,15 @@ const Header = () => {
       localStorage.setItem('token', token);
 
       currUsername.current = response?.data?.username;
-      setUserLoggedIn(true);
 
       setLoginEmail('');
       setLoginPassword('');
+      setUserLoggedIn(true);
 
       console.log('Login Successful!');
     } catch (err) {
-      console.log(err.response);
       if (!err?.response) {
-        setError('Login not successful. Please try again.');
-      } else if (err.response?.status === 404) {
-        setError(err.response?.data?.message);
-      } else if (err.response?.status === 401) {
-        setError(err.response?.data?.message);
-      } else if (err.response?.status === 500) {
-        setError('Internal Server Error.');
+        console.log('Login not successful / No server response.');
       }
     }
   };
@@ -84,11 +76,7 @@ const Header = () => {
       // console.log(currUsername.current);
     } catch (err) {
       if (!err?.response) {
-        setError('Sign Up not successful. Please try again.');
-      } else if (err.response?.status === 409) {
-        setError(err.response?.data?.message);
-      } else if (err.response?.status === 500) {
-        setError('Internal Server Error.')
+        console.log('Sign Up not successful / No server response.');
       }
     }
   };
@@ -97,8 +85,7 @@ const Header = () => {
     localStorage.removeItem('token');
     setUserLoggedIn(false);
     currUsername.current = '';
-    setLoginModalOpen(false);
-    setSignupModalOpen(false);
+    setLoginModalOpen(false)
   };
 
   return (
@@ -164,13 +151,6 @@ const Header = () => {
                   disabled={!loginEmail || !loginPassword}
                 />
               </Modal.Actions>
-              {
-                error &&
-                <Message negative>
-                  <Message.Header>Error!</Message.Header>
-                  <p>{error}</p>
-                </Message>
-              }
             </Modal>
           </Menu.Item>
           <Menu.Item>
@@ -225,13 +205,6 @@ const Header = () => {
                   disabled={!signupUsername || !signupEmail || !signupPassword}
                 />
               </Modal.Actions>
-              {
-                error &&
-                <Message negative>
-                  <Message.Header>Error!</Message.Header>
-                  <p>{error}</p>
-                </Message>
-              }
             </Modal>
           </Menu.Item>
         </React.Fragment>)}
