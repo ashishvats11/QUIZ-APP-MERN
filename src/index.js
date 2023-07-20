@@ -4,7 +4,6 @@ import './index.css';
 import App from './components/App';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 ReactDOM.render(
   <Router>
@@ -15,5 +14,3 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
-
-serviceWorkerRegistration.register();
