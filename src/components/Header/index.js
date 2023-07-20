@@ -38,7 +38,7 @@ const Header = () => {
       currUsername.current = response?.data?.username;
       setUserLoggedIn(true);
 
-      setLoginEmail('');
+      setLoginEmail('');  
       setLoginPassword('');
 
       console.log('Login Successful!');
